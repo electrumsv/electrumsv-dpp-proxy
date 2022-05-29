@@ -15,9 +15,8 @@ jobs:
     vmImage: 'ubuntu-latest'
 
   variables:
-    buildConfiguration: 'Release'
     BUILD_PATH: '$(Build.BinariesDirectory)/dpp-proxy-linux'
-    MAIN_DOT_GO_PATH: '$(Build.BinariesDirectory)/dpp-proxy-linux/cmd/server'
+    OUTPUT_PATH: $(BUILD_PATH)/publish/server
 
   steps :
     - script: |
@@ -26,9 +25,12 @@ jobs:
       displayName: 'clone'
 
     - task: GoTool@0
+      inputs:
+        version: '1.17.x'
 
-    - bash: |
-        CGO_ENABLED=0 go build -o server.exe -ldflags="-s -w" $(MAIN_DOT_GO_PATH)
+    - script: |
+        cd $(BUILD_PATH)
+        go build -o $(OUTPUT_PATH) -ldflags="-s -w" ./cmd/server
       displayName: 'Compile'
 
     - task: PublishBuildArtifacts@1
@@ -43,9 +45,8 @@ jobs:
     vmImage: 'macOS-10.15'
 
   variables:
-    buildConfiguration: 'Release'
     BUILD_PATH: '$(Build.BinariesDirectory)/dpp-proxy-macosx'
-    MAIN_DOT_GO_PATH: '$(Build.BinariesDirectory)/dpp-proxy-macosx/cmd/server'
+    OUTPUT_PATH: $(BUILD_PATH)/publish/server
 
   steps :
     - script: |
@@ -54,9 +55,12 @@ jobs:
       displayName: 'clone'
 
     - task: GoTool@0
+      inputs:
+        version: '1.17.x'
 
-    - bash: |
-        CGO_ENABLED=0 go build -o server.exe -ldflags="-s -w" $(MAIN_DOT_GO_PATH)
+    - script: |
+        cd $(BUILD_PATH)
+        go build -o $(OUTPUT_PATH) -ldflags="-s -w" ./cmd/server
       displayName: 'Compile'
 
     - task: PublishBuildArtifacts@1
@@ -71,9 +75,8 @@ jobs:
     vmImage: 'windows-latest'
 
   variables:
-    buildConfiguration: 'Release'
     BUILD_PATH: '$(Build.BinariesDirectory)\dpp-proxy-windows'
-    MAIN_DOT_GO_PATH: '$(Build.BinariesDirectory)\dpp-proxy-windows\cmd\server'
+    OUTPUT_PATH: $(BUILD_PATH)\publish\server.exe
 
   steps :
     - script: |
@@ -82,9 +85,12 @@ jobs:
       displayName: 'clone'
 
     - task: GoTool@0
+      inputs:
+        version: '1.17.x'
 
-    - bash: |
-        CGO_ENABLED=0 go build -o server.exe -ldflags="-s -w" $(MAIN_DOT_GO_PATH)
+    - script: |
+        cd $(BUILD_PATH)
+        go build -o $(OUTPUT_PATH) -ldflags="-s -w" .\cmd\server
       displayName: 'Compile'
 
     - task: PublishBuildArtifacts@1
