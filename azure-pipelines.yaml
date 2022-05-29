@@ -1,0 +1,94 @@
+trigger:
+  batch: true
+  branches:
+    include:
+    - master
+    - releases/*
+    - features/*
+  paths:
+    exclude: [ 'README.md' ]
+
+jobs:
+- job: BuildLinux
+
+  pool:
+    vmImage: 'ubuntu-latest'
+
+  variables:
+    buildConfiguration: 'Release'
+    BUILD_PATH: '$(Build.BinariesDirectory)/dpp-proxy-linux'
+    MAIN_DOT_GO_PATH: '$(Build.BinariesDirectory)/dpp-proxy-linux/cmd/server'
+
+  steps :
+    - script: |
+        set -e
+        git clone --depth=1 https://github.com/bitcoin-sv/dpp-proxy.git $(BUILD_PATH)
+      displayName: 'clone'
+
+    - task: GoTool@0
+
+    - bash: |
+        CGO_ENABLED=0 go build -o server.exe -ldflags="-s -w" $(MAIN_DOT_GO_PATH)
+      displayName: 'Compile'
+
+    - task: PublishBuildArtifacts@1
+      displayName: 'publish artifact'
+      inputs:
+        artifactName: 'LinuxDPPProxy'
+        pathtoPublish: '$(BUILD_PATH)/publish'
+
+- job: BuildMacOSX
+
+  pool:
+    vmImage: 'macOS-10.15'
+
+  variables:
+    buildConfiguration: 'Release'
+    BUILD_PATH: '$(Build.BinariesDirectory)/dpp-proxy-macosx'
+    MAIN_DOT_GO_PATH: '$(Build.BinariesDirectory)/dpp-proxy-macosx/cmd/server'
+
+  steps :
+    - script: |
+        set -e
+        git clone --depth=1 https://github.com/bitcoin-sv/dpp-proxy.git $(BUILD_PATH)
+      displayName: 'clone'
+
+    - task: GoTool@0
+
+    - bash: |
+        CGO_ENABLED=0 go build -o server.exe -ldflags="-s -w" $(MAIN_DOT_GO_PATH)
+      displayName: 'Compile'
+
+    - task: PublishBuildArtifacts@1
+      displayName: 'publish artifact'
+      inputs:
+        artifactName: 'MacOSXDPPProxy'
+        pathtoPublish: '$(BUILD_PATH)/publish'
+
+- job: BuildWindows
+
+  pool:
+    vmImage: 'windows-latest'
+
+  variables:
+    buildConfiguration: 'Release'
+    BUILD_PATH: '$(Build.BinariesDirectory)\dpp-proxy-windows'
+    MAIN_DOT_GO_PATH: '$(Build.BinariesDirectory)\dpp-proxy-windows\cmd\server'
+
+  steps :
+    - script: |
+        set -e
+        git clone --depth=1 https://github.com/bitcoin-sv/dpp-proxy.git $(BUILD_PATH)
+      displayName: 'clone'
+
+    - task: GoTool@0
+
+    - bash: |
+        CGO_ENABLED=0 go build -o server.exe -ldflags="-s -w" $(MAIN_DOT_GO_PATH)
+      displayName: 'Compile'
+
+    - task: PublishBuildArtifacts@1
+      displayName: 'publish artifact'
+      inputs:
+        artifactName: 'WindowsDPPProxy'
+        pathtoPublish: '$(BUILD_PATH)\publish'
