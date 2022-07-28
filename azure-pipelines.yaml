@@ -21,7 +21,7 @@ jobs:
   steps :
     - script: |
         set -e
-        git clone --depth=1 https://github.com/bitcoin-sv/dpp-proxy.git $(BUILD_PATH)
+        git clone -b features/update-for-tsc-spec-compliance --depth=1 https://github.com/bitcoin-sv/dpp-proxy.git $(BUILD_PATH)
       displayName: 'clone'
 
     - task: GoTool@0
@@ -51,7 +51,7 @@ jobs:
   steps :
     - script: |
         set -e
-        git clone --depth=1 https://github.com/bitcoin-sv/dpp-proxy.git $(BUILD_PATH)
+        git clone -b features/update-for-tsc-spec-compliance --depth=1 https://github.com/bitcoin-sv/dpp-proxy.git $(BUILD_PATH)
       displayName: 'clone'
 
     - task: GoTool@0
@@ -81,7 +81,7 @@ jobs:
   steps :
     - script: |
         set -e
-        git clone --depth=1 https://github.com/bitcoin-sv/dpp-proxy.git $(BUILD_PATH)
+        git clone -b features/update-for-tsc-spec-compliance --depth=1 https://github.com/bitcoin-sv/dpp-proxy.git $(BUILD_PATH)
       displayName: 'clone'
 
     - task: GoTool@0
